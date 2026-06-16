@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,18 +17,25 @@ class Post
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(allowNull: null, normalizer: 'trim')]
+    #[Assert\Length(min: 0, max: 255)]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Assert\NotBlank(allowNull: true, normalizer: 'trim')]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Assert\NotBlank(allowNull: null, normalizer: 'trim')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[Assert\Type(\DateTimeImmutable::class)]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
+    #[Assert\NotNull]
+    #[Assert\Type(type: 'integer')]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $status = 1;
 
