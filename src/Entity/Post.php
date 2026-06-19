@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Attribute\Groups;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,33 +13,40 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
+    #[Groups(groups: ['post:item'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Groups(groups: ['post:item'])]
     #[Assert\NotBlank(allowNull: null, normalizer: 'trim')]
     #[Assert\Length(min: 0, max: 255)]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Groups(groups: ['post:item'])]
     #[Assert\NotBlank(allowNull: true, normalizer: 'trim')]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Groups(groups: ['post:item'])]
     #[Assert\NotBlank(allowNull: null, normalizer: 'trim')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[Groups(groups: ['post:item'])]
     #[Assert\Type(\DateTimeImmutable::class)]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
+    #[Groups(groups: ['post:item'])]
     #[Assert\NotNull]
     #[Assert\Type(type: 'integer')]
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $status = 1;
 
+    #[Groups(groups: ['post:item'])]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;

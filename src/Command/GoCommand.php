@@ -4,9 +4,8 @@ namespace App\Command;
 
 use App\Entity\Category;
 use App\Entity\Post;
-use App\Entity\Tag;
-use App\Repository\PostRepository;
 use App\Resource\PostResource;
+use App\ResponseBuilder\PostResponseBuilder;
 use App\Service\PostService;
 use App\Validator\PostValidator;
 use DateTimeImmutable;
@@ -15,7 +14,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[AsCommand(
     name: 'GoCommand',
@@ -27,7 +25,7 @@ class GoCommand extends Command
         private EntityManagerInterface $em,
         private PostService $postService,
         private PostValidator $postValidator,
-        private PostResource $postResource,
+        private PostResponseBuilder $responseBuilder,
     ) {
         parent::__construct();
     }
@@ -80,8 +78,8 @@ class GoCommand extends Command
 
         $this->postValidator->validate($post);
         $post = $this->postService->store($post);
-        $post = $this->postResource->postItem($post);
-        dd($post);
+        $res = $this->responseBuilder->storePost($post);
+        dd($res);
 
         return Command::SUCCESS;
     }
