@@ -2,13 +2,10 @@
 
 namespace App\Command;
 
-use App\Entity\Category;
-use App\Entity\Post;
-use App\Resource\PostResource;
+use App\Factory\PostFactory;
 use App\ResponseBuilder\PostResponseBuilder;
 use App\Service\PostService;
 use App\Validator\PostValidator;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -26,6 +23,7 @@ class GoCommand extends Command
         private PostService $postService,
         private PostValidator $postValidator,
         private PostResponseBuilder $responseBuilder,
+        private PostFactory $postFactory,
     ) {
         parent::__construct();
     }
@@ -66,18 +64,10 @@ class GoCommand extends Command
         // $this->em->flush();
 
         $data = ['title' => 'bleble', 'description' => 'bleble', 'content' => 'bleble', 'published_at' => '2020-02-02', 'status' => 2, 'category_id' => 1];
-        $category = $this->em->getReference(Category::class, 1); //более правильный вариант когда нам нужно только id
 
-        $post = new Post();
-        $post->setTitle($data['title']);
-        $post->setDescription($data['description']);
-        $post->setContent($data['content']);
-        $post->setPublishedAt(new DateTimeImmutable($data['published_at']));
-        $post->setStatus($data['status']);
-        $post->setCategory($category);
-
-        $this->postValidator->validate($post);
-        $post = $this->postService->store($post);
+        $storePostInputDTO = $this->postFactory->makeStorePostInoutDTO($data);
+        $this->postValidator->validate($storePostInputDTO);
+        $post = $this->postService->store($storePostInputDTO);
         $res = $this->responseBuilder->storePost($post);
         dd($res);
 

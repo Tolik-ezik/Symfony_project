@@ -20,23 +20,18 @@ class Post
     private ?int $id = null;
 
     #[Groups(groups: ['post:item'])]
-    #[Assert\NotBlank(allowNull: null, normalizer: 'trim')]
-    #[Assert\Length(min: 0, max: 255)]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
     #[Groups(groups: ['post:item'])]
-    #[Assert\NotBlank(allowNull: true, normalizer: 'trim')]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[Groups(groups: ['post:item'])]
-    #[Assert\NotBlank(allowNull: null, normalizer: 'trim')]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
     #[Groups(groups: ['post:item'])]
-    #[Assert\Type(\DateTimeImmutable::class)]
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $publishedAt = null;
 
